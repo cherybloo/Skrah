@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles.css" rel="stylesheet">
+    <script src="adders.js"></script>
+
     <title>Document</title>
 </head>
-<body>
-    
+<body class="center">
+    <h1><b>Welcome to this bullshit website</b></h1>
+
+    <form method="GET" action="/facts" class="randomFact" onclick="facts()">
+        <button type="submit" >Give me random fact</button>
+    </form>
+    <p id="testing"></p>
+    <form method="GET" action="/questions">
+        <button type="submit">Give me questions</button>
+    </form>
+
 </body>
 </html>
