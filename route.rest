@@ -1,0 +1,14 @@
+# GET ALL
+GET http://localhost:6969/api/get/questionJoke/65775f36bf0b6a775f6e952
+
+### POST
+
+POST http://localhost:6969/api/post/randomFact
+Content-Type: application/json
+{
+    "randomJoke":"A guy walks into a library and asks the librarian for a book on committing suicide.She responds, “Fcuk off, you won’t bring it back.”"
+}
+
+###
+
+GET http://localhost:6969/api/get/randomJoke
