@@ -1,14 +1,45 @@
 # GET ALL
-GET http://localhost:6969/api/get/questionJoke/65775f36bf0b6a775f6e952
+GET http://localhost:6969/api/all
 
 ### POST
 
-POST http://localhost:6969/api/post/randomFact
+POST http://localhost:6969/api/randomJoke
 Content-Type: application/json
+
 {
-    "randomJoke":"A guy walks into a library and asks the librarian for a book on committing suicide.She responds, “Fcuk off, you won’t bring it back.”"
+    "randomJoke":"Nothing bruh"
 }
 
 ###
+POST http://localhost:6969/api/questionJoke
+Content-Type: application/json
 
-GET http://localhost:6969/api/get/randomJoke
+{
+    "question":"What is something bigger than your mom?",
+    "answer": "My dick"
+}
+
+###
+POST http://localhost:6969/api/questionJoke
+Content-Type: application/json
+
+{
+    "randomJoke":"Is this success?"
+}
+###
+GET http://localhost:6969/api/randomJoke/6577b79c2053e0f699c11505
+
+###
+GET http://localhost:6969/api/
+###
+DELETE  http://localhost:6969/api/randomJoke/
+
+
+###
+
+PATCH http://localhost:6969/api/randomJoke/6577b79c2053e0f699c11505
+Content-Type: application/json
+
+{
+    "questoin":"Updated again"
+}

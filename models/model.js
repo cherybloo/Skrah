@@ -12,6 +12,15 @@ const questionJokeSchema = new Schema({
     dateCreated: {type: Date, required: true, default: Date.now()},
 })
 
+/*
+randomJokeSchema.pre('deleteOne',{ document: true, query: false }, function(next){
+    next()
+})
+
+questionJokeSchema.pre('deleteOne',{ document: true, query: false }, function(next){
+    next()
+})
+*/
 // Method 1
 module.exports = {
     RandomJoke : mongoose.model('RandomJoke',randomJokeSchema),

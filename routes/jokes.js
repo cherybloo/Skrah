@@ -6,7 +6,7 @@ const {RandomJoke,QuestionJoke} = require('../models/model'); // Back one direct
 // ROUTES = localhost:6969/api/...
 
 // POST
-router.post('/post/:type?', async (req,res) => {
+router.post('/:type?', async (req,res) => {
     var jokesType = req.params.type;
     var data;
 
@@ -40,69 +40,99 @@ router.post('/post/:type?', async (req,res) => {
 
 // GET ALL (Learn more about async, await,then and PROMISES!)
 router.get('/all', async (req,res) => {
-    // Method 1
-    await RandomJoke.find().then((data) =>{
-        res.json(data);
+    // Method 1 
+    await Promise.all([RandomJoke.find(),QuestionJoke.find()])
+    .then((result) => {
+        res.send(result)
     })
-    .catch((err) => {
-        res.status(500).json({error:"HAH BIRCH"})
-    })
-
-    // Method 2
-    /*
-    try{
-        const data = await RandomJoke.find();
-        res.json(data);
-    }
-    catch{
-        res.status(500).json({message:'HSKFSF'})
-    }
-    */
 })
 
 // GET BY ID
-router.get('/get/:type?/:id?', async (req,res) => {
-    var jokesType = req.params.type;
-    var data;
-
-    switch(jokesType)
-    {
-        case 'questionJoke':
-            try{
-                data = await QuestionJoke.findById(id);
-            }
-            catch{
-                data = await QuestionJoke.find();
-            }
-            res.json(data);
-            break;
-        
-        case 'randomJoke':
-            try{
-                data = await RandomJoke.findById(id);
-            }
-            catch{
-                data = await RandomJoke.find();
-            }
-            res.json(data);
-            break;
-        
-        default:
-            res.json({message: 'looking something son?'})
-            break;
-    }
+router.get('/:type?/:id?', getJokes, async (req,res) => {
+    await res.joke.findById(req.params.id)
+    .then(
+        (result) => {
+            res.json(result)
+        }
+    )
+    .catch(
+        (err) => {
+            res.status(400).json({message:err.message})
+        }
+    )
 })
 
 // UPDATE
-router.patch('/update/:type/:id',async (req,res) => {
-
+router.patch('/:type?/:id?', getJokes, async (req,res) => {
+    await res.joke.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true },
+    )
+    .catch( (err) => {
+        res.status(400).json({message:err.message})
+    })
 })
 
 // DELETE
-router.delete('/delete/:type/:id', async (req,res) => {
-    var userparam = req.query.type;
-    res.send("DELETE ENDPOINT");
+router.delete('/:type?/:id?', getJokes, async (req,res) => {
+    await res.joke.findByIdAndDelete(req.params.id)
+    .then( (status) => {
+        console.log(status)
+    })
+    .catch( (err) => {
+        res.status(500).json({ message: "BRUH" });
+    })
 })
 
+// Middleware for every request (GET BY ID, DELETE, UPDATE,)
+async function getJokes(req,res,next)
+{
+    let jokesType = req.params.type;
+    let joke;
+
+    console.log(jokesType)
+    console.log(req.params.id)
+
+    if (!req.params.type)
+    {
+        return res.status(404).json({ message: "Cannot find something without Joke Type"});
+    }
+
+    if (!req.params.id || !req.params.type)
+    {
+        return res.status(404).json({ message: "Cannot find something without ID"});
+    }
+
+    switch(jokesType)
+    {
+        case 'randomJoke':
+            try
+            {
+                joke = await RandomJoke;
+                res.joke = joke;
+            }
+            catch (err)
+            {
+                res.status(500).json({ message: err.message });
+            }
+            break;
+        case 'questionJoke':
+            try
+            {
+                joke = await QuestionJoke;
+                res.joke = joke;
+            }
+            catch (err)
+            {
+                res.status(500).json({ message: err.message})
+            }
+            break;
+        default:
+            return res.json(500).json({ message: "Really dude no joke option? "});
+    }
+
+    next() // Allow the program to continue with the rest of the request
+}
 
 module.exports = router;
